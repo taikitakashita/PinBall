@@ -34,17 +34,20 @@ public class TotalScoreCounter : MonoBehaviour {
         if (other.gameObject.CompareTag("SmallStarTag"))
         {
             this.totalscore += 10;
+            // TotalScoreTextの表示を更新
+            this.totalscoreText.GetComponent<Text>().text = "TotalScore：" + this.totalscore;
         }
         else if (other.gameObject.CompareTag("LargeStarTag") || other.gameObject.CompareTag("SmallCloudTag"))
         {
             this.totalscore += 20;
+            // TotalScoreTextの表示を更新
+            this.totalscoreText.GetComponent<Text>().text = "TotalScore：" + this.totalscore;
         }
         else if (other.gameObject.CompareTag("LargeCloudTag"))
         {
             this.totalscore += 50;
+            // TotalScoreTextの表示を更新
+            this.totalscoreText.GetComponent<Text>().text = "TotalScore：" + this.totalscore;
         }
-
-        // TotalScoreTextの表示を更新
-        this.totalscoreText.GetComponent<Text>().text = "TotalScore：" + this.totalscore.ToString();
     }
 }
