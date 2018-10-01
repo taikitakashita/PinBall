@@ -11,9 +11,9 @@ public class FripperController : MonoBehaviour
     //弾いた時の傾き
     private float flickAngle = -20;
 
-    // 複数のタッチ毎に左右のフリッパーを動作させたか判定する配列(10本のタッチまでを想定)
-    bool[] touchsetleft = new bool[10];
-    bool[] touchsetright = new bool[10];
+    //左右に指がタッチされているかの判定フラグ
+    private bool lefttouch;
+    private bool righttouch;
 
     // Use this for initialization
     void Start()
@@ -50,6 +50,9 @@ public class FripperController : MonoBehaviour
             SetAngle(this.defaultAngle);
         }
 
+        lefttouch = false;
+        righttouch = false;
+
         // タッチされていることの判定
         if (Input.touchCount > 0)
         {
@@ -63,34 +66,41 @@ public class FripperController : MonoBehaviour
                 Vector2 tauchePos = new Vector2(touches[i].position.x, touches[i].position.y);
 
                 //画面の中心から左を押した時左フリッパーを動かす
-                if (myHingeJoint.spring.targetPosition == 20 && touchsetleft[i] == false && touches[i].phase == TouchPhase.Began && tag == "LeftFripperTag" && tauchePos.x <= Screen.width / 2)
+                if (touches[i].phase == TouchPhase.Began && tag == "LeftFripperTag" && tauchePos.x <= Screen.width / 2)
                 {
                     SetAngle(this.flickAngle);
-                    touchsetleft[i] = true;
                 }
 
                 //画面の中心から右を押した時右フリッパーを動かす
-                if (myHingeJoint.spring.targetPosition == 20 && touchsetright[i] == false && touches[i].phase == TouchPhase.Began && tag == "RightFripperTag" && tauchePos.x > Screen.width / 2)
+                if (touches[i].phase == TouchPhase.Began && tag == "RightFripperTag" && tauchePos.x > Screen.width / 2)
                 {
                     SetAngle(this.flickAngle);
-                    touchsetright[i] = true;
                 }
 
-                //画面の中心から左で離した時左フリッパーを戻す
-                if (myHingeJoint.spring.targetPosition == -20 && touchsetleft[i] == true && touches[i].phase == TouchPhase.Ended && tag == "LeftFripperTag")
+                //画面の中心から左にタッチされているかの判定
+                if (tauchePos.x <= Screen.width / 2)
                 {
-                    SetAngle(this.defaultAngle);
-                    touchsetleft[i] = false;
+                    lefttouch = true;
                 }
 
-                //画面の中心から右で離した時右フリッパーを戻す
-                if (myHingeJoint.spring.targetPosition == -20 && touchsetright[i] == true && touches[i].phase == TouchPhase.Ended && tag == "RightFripperTag")
+                //画面の中心から右にタッチされているかの判定
+                if (tauchePos.x > Screen.width / 2)
                 {
-
-                    SetAngle(this.defaultAngle);
-                    touchsetright[i] = false;
+                    righttouch = true;
                 }
             }
+        }
+        Debug.Log(tag + "   左" + lefttouch + "   右" + righttouch);
+        if (lefttouch == false && tag == "LeftFripperTag")
+        {
+            SetAngle(this.defaultAngle);
+            lefttouch = false;
+        }
+
+        if (righttouch == false && tag == "RightFripperTag")
+        {
+            SetAngle(this.defaultAngle);
+            righttouch = false;
         }
     }
 
